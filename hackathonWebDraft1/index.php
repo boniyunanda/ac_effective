@@ -5,10 +5,12 @@
                 $message = "";
                 $message2 = "";
                 $message3 = "";
+                $message4 ="";
                 $namePrsn="";
                 $humid="";
                 $wind=0.0;
                 $tempM="";
+                $co2="";
                 if(isset($_POST['SubmitBtn'])){
                     include "connection.php";
                     include "connection-api.php";
@@ -17,8 +19,7 @@
                     $tempM= $data['main']['feels_like'];
                     $wind= $data['wind']['speed'];
                     
-                    $tempM=explode(".", $tempM);
-                    $tempM=$tempM[1];
+                    $tempM=$tempM-273.15;
 
                     $name=$_POST["name-person"];
                     $temp=$_POST["temp"];
@@ -43,11 +44,13 @@
                             {
 
                                 $tempHasil= $row['temp'];
+                                $co2=(int)$hrs*12385;
 
                                 if($tempHasil < 25){
                                     $message="Hey you should increase your AC temperature, above 25° will be good since every temperature will reduce   electricity   consumption by 3-5%.";
                                     $firstAct=(int)$hrs*109;
                                     $secondAct=(int)$hrs*113;
+                                    
                                     $lastAct=$secondAct-$firstAct;
                                     $message2="If you stay at ".$tempHasil."° Celcius it will consume ".$secondAct." kWh. If you try to use the temperature above 25° you can reduce about ".$lastAct." kWh.";
                                 }
@@ -60,6 +63,8 @@
                                     $message2="Your wind was around ".$wind."m/s maybe you can open your window and turn on your ac";
                                     $message="";
                                 }
+
+                                $message4="Still Remember! you need to reduce your use of AC since you already produce about ".$co2." carbon dioxide.";
                             }
                         }
                         else {
@@ -130,6 +135,8 @@
                 <?php echo '<a class="description-judul">'.$message2.'</a>' ?>
                 <br>
                 <?php echo '<a class="description-judul">'.$message3.'</a>' ?>
+                <br>
+                <?php echo '<a class="description-judul">'.$message4.'</a>' ?>
             </div>
         </div>
 
